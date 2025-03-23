@@ -44,8 +44,8 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (!active || !payload) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg border border-gray-100 dark:border-gray-700">
-      <p className="font-medium text-sm mb-1 dark:text-gray-200">{label}</p>
+    <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-100">
+      <p className="font-medium text-sm mb-2">{label}</p>
       {payload.map((entry, index) => (
         <p key={index} className="text-sm" style={{ color: entry.stroke }}>
           ${entry.value.toFixed(2)}
@@ -86,14 +86,14 @@ export function InvoiceTrendChart({ invoices }: InvoiceTrendChartProps) {
   const chartData = processInvoiceData();
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-[20px] shadow-sm overflow-hidden">
-      <div className="p-4">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Monthly Invoice Trend</h2>
-        <div className="h-[220px] w-full">
+    <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
+      <div className="p-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Monthly Invoice Trend</h2>
+        <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={chartData}
-              margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+              margin={{ top: 10, right: 10, left: 0, bottom: 10 }}
             >
               <defs>
                 <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
@@ -103,7 +103,6 @@ export function InvoiceTrendChart({ invoices }: InvoiceTrendChartProps) {
               </defs>
               <CartesianGrid
                 stroke="#f0f0f0"
-                strokeOpacity={0.5}
                 horizontal={true}
                 vertical={false}
                 strokeDasharray="3 0"
@@ -112,13 +111,9 @@ export function InvoiceTrendChart({ invoices }: InvoiceTrendChartProps) {
                 dataKey="month"
                 tickSize={0}
                 axisLine={false}
-                padding={{ left: 10, right: 10 }}
+                padding={{ left: 20, right: 20 }}
                 tick={{
-                  fontSize: 11,
-                  fill: '#7B91B0',
-                }}
-                style={{
-                  fontSize: '11px',
+                  fontSize: 12,
                   fill: '#7B91B0',
                 }}
               />
@@ -126,15 +121,11 @@ export function InvoiceTrendChart({ invoices }: InvoiceTrendChartProps) {
                 tickSize={0}
                 axisLine={false}
                 tick={{
-                  fontSize: 11,
-                  fill: '#7B91B0',
-                }}
-                style={{
-                  fontSize: '11px',
+                  fontSize: 12,
                   fill: '#7B91B0',
                 }}
                 tickFormatter={(value) => `$${value}`}
-                width={45}
+                width={60}
               />
               <Tooltip content={<CustomTooltip />} />
               <Area
@@ -144,8 +135,8 @@ export function InvoiceTrendChart({ invoices }: InvoiceTrendChartProps) {
                 stroke="#3CD856"
                 fillOpacity={1}
                 fill="url(#colorAmount)"
-                strokeWidth={2.5}
-                activeDot={{ r: 5 }}
+                strokeWidth={3}
+                activeDot={{ r: 6 }}
               />
             </AreaChart>
           </ResponsiveContainer>

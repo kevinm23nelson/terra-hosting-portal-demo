@@ -20,11 +20,11 @@ interface AccountInformationProps {
 
 export function AccountInformation({ customer }: AccountInformationProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-[20px] shadow-sm overflow-hidden">
-      <div className="p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-[20px] shadow-sm overflow-hidden h-full flex flex-col">
+      <div className="p-6 flex-grow flex flex-col">
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Account Information</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow pb-4">
           {/* Company Name - Blue */}
           <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
             <div className="flex items-center mb-2">

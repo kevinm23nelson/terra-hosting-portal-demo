@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import DashboardLayout from "./components/DashboardLayout";
 import LoginTracker from "./components/LoginTracker";
 import MockMinersList from "./components/MockMinersList";
@@ -11,6 +12,8 @@ import { mockAccount, getBillingStats } from "./mockBillingData";
 import { getQuickBooksStats } from "./mockQuickBooksData";
 
 export default function DashboardPage() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   // Get client data from mock files
   const clientName = mockAccount?.first_name
     ? `${mockAccount.first_name} ${mockAccount.last_name}`
@@ -110,11 +113,26 @@ export default function DashboardPage() {
     },
   ];
 
+  // Trigger animations after component mount
+  useEffect(() => {
+    // Small delay to ensure smooth animation
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Animation classes to be applied conditionally
+  const fadeIn = "transition-all duration-500 ease-out";
+  const hidden = "opacity-0 translate-y-6";
+  const visible = "opacity-100 translate-y-0";
+
   return (
     <DashboardLayout>
       <div className="p-6 space-y-6">
         {/* Top Section: Stats Overview and Login Tracker */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 auto-rows-fr">
+        <div className={`grid grid-cols-1 xl:grid-cols-3 gap-6 auto-rows-fr ${fadeIn} ${isLoaded ? visible : hidden}`} style={{ transitionDelay: "100ms" }}>
           <div className="xl:col-span-2 min-h-0">
             <StatsCards
               cards={statsCards}
@@ -123,25 +141,27 @@ export default function DashboardPage() {
             />
           </div>
           <div className="xl:col-span-1 min-h-0">
-            <LoginTracker />
+            <div className={`${fadeIn} ${isLoaded ? visible : hidden}`} style={{ transitionDelay: "250ms" }}>
+              <LoginTracker />
+            </div>
           </div>
         </div>
 
         {/* Main Content: Miners and Subscriptions */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Miners List */}
-          <div className="xl:col-span-1">
+          <div className={`xl:col-span-1 ${fadeIn} ${isLoaded ? visible : hidden}`} style={{ transitionDelay: "400ms" }}>
             <MockMinersList />
           </div>
 
           {/* Subscriptions List */}
-          <div className="xl:col-span-1">
+          <div className={`xl:col-span-1 ${fadeIn} ${isLoaded ? visible : hidden}`} style={{ transitionDelay: "550ms" }}>
             <MockSubscriptionsList />
           </div>
         </div>
 
         {/* Recent Activity Section */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <div className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm ${fadeIn} ${isLoaded ? visible : hidden}`} style={{ transitionDelay: "700ms" }}>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">
             Recent Activity
           </h2>
@@ -173,7 +193,11 @@ export default function DashboardPage() {
                 type: "info",
               },
             ].map((activity, index) => (
-              <div key={index} className="flex items-start">
+              <div 
+                key={index} 
+                className={`flex items-start ${fadeIn} ${isLoaded ? visible : hidden}`}
+                style={{ transitionDelay: `${750 + index * 50}ms` }}
+              >
                 <div
                   className={`mt-1 w-3 h-3 rounded-full flex-shrink-0 ${
                     activity.type === "info"
