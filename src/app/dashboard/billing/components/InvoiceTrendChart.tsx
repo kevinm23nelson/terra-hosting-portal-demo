@@ -88,8 +88,8 @@ export function InvoiceTrendChart({ invoices }: InvoiceTrendChartProps) {
   return (
     <div className="bg-white rounded-[20px] shadow-sm overflow-hidden">
       <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Monthly Invoice Trend</h2>
-        <div className="h-[300px] w-full">
+      <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Monthly Invoice Trend</h2>
+      <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={chartData}
