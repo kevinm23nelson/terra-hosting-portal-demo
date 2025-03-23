@@ -1,8 +1,8 @@
 // src/app/dashboard/machines/components/PowerDrawChart.tsx
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
+import React, { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import {
   Area,
   AreaChart,
@@ -12,7 +12,7 @@ import {
   YAxis,
   CartesianGrid,
   TooltipProps,
-} from 'recharts';
+} from "recharts";
 
 interface ChartData {
   month: string;
@@ -28,7 +28,8 @@ interface PayloadItem {
 }
 
 // Custom tooltip component
-interface CustomTooltipProps extends Omit<TooltipProps<number, string>, 'payload'> {
+interface CustomTooltipProps
+  extends Omit<TooltipProps<number, string>, "payload"> {
   active?: boolean;
   payload?: PayloadItem[];
   label?: string;
@@ -39,9 +40,15 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 
   return (
     <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg border border-gray-100 dark:border-gray-700">
-      <p className="font-medium text-sm mb-1 text-gray-800 dark:text-gray-200">{label}</p>
+      <p className="font-medium text-sm mb-1 text-gray-800 dark:text-gray-200">
+        {label}
+      </p>
       {payload.map((entry, index) => (
-        <p key={index} className="text-sm font-medium" style={{ color: entry.stroke }}>
+        <p
+          key={index}
+          className="text-sm font-medium"
+          style={{ color: entry.stroke }}
+        >
           {entry.value.toFixed(2)} kW
         </p>
       ))}
@@ -53,34 +60,34 @@ export function PowerDrawChart() {
   // Theme detection for dark mode
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
+  const [currentTheme, setCurrentTheme] = useState<"light" | "dark">("light");
 
   // Ensure component is mounted to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
-    const calculatedTheme = theme === 'system' ? systemTheme : theme;
-    setCurrentTheme(calculatedTheme as 'light' | 'dark');
+    const calculatedTheme = theme === "system" ? systemTheme : theme;
+    setCurrentTheme(calculatedTheme as "light" | "dark");
   }, [theme, systemTheme]);
 
   // Generate mock data for the past 6 months with increasing power usage
   const generateMockData = (): ChartData[] => {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
     const currentYear = new Date().getFullYear();
-    
+
     // Start with a base power and gradually increase to reach 3000 by the end
-    let basePower = 2500;
+    const basePower = 2500;
     const monthlyIncrease = (3000 - 2500) / (months.length - 1);
-    
+
     return months.map((month, index) => {
       // Calculate the target power for this month
-      const targetPower = basePower + (monthlyIncrease * index);
-      
+      const targetPower = basePower + monthlyIncrease * index;
+
       // Add some randomness to each month's value (±50 kW)
       const monthPower = targetPower + (Math.random() * 100 - 50);
-      
+
       return {
         month: `${month} ${currentYear}`,
-        power: parseFloat(monthPower.toFixed(2))
+        power: parseFloat(monthPower.toFixed(2)),
       };
     });
   };
@@ -89,11 +96,14 @@ export function PowerDrawChart() {
 
   // Dark mode color adjustments
   const chartColors = {
-    text: currentTheme === 'dark' ? '#e5e7eb' : '#3F4759',
-    grid: currentTheme === 'dark' ? '#374151' : '#f0f0f0',
-    stroke: '#ff9800',
-    gradientStart: currentTheme === 'dark' ? 'rgba(255, 152, 0, 0.3)' : 'rgba(255, 152, 0, 0.2)',
-    gradientEnd: 'rgba(255, 152, 0, 0)',
+    text: currentTheme === "dark" ? "#e5e7eb" : "#3F4759",
+    grid: currentTheme === "dark" ? "#374151" : "#f0f0f0",
+    stroke: "#ff9800",
+    gradientStart:
+      currentTheme === "dark"
+        ? "rgba(255, 152, 0, 0.3)"
+        : "rgba(255, 152, 0, 0.2)",
+    gradientEnd: "rgba(255, 152, 0, 0)",
   };
 
   if (!mounted) {
@@ -111,7 +121,9 @@ export function PowerDrawChart() {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-[20px] shadow-sm overflow-hidden">
       <div className="p-4">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Power Consumption Trend</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+          Power Consumption Trend
+        </h2>
         <div className="h-[220px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
@@ -120,8 +132,16 @@ export function PowerDrawChart() {
             >
               <defs>
                 <linearGradient id="colorPower" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={chartColors.stroke} stopOpacity={0.2} />
-                  <stop offset="95%" stopColor={chartColors.stroke} stopOpacity={0} />
+                  <stop
+                    offset="5%"
+                    stopColor={chartColors.stroke}
+                    stopOpacity={0.2}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={chartColors.stroke}
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               </defs>
               <CartesianGrid

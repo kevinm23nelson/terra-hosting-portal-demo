@@ -80,7 +80,8 @@ module.exports = {
     },
   },
   plugins: [
-    require("tailwindcss-animate"),
+    // Change this line
+    import("tailwindcss-animate"),
     function({ addVariant }) {
       // Add terra variant for the Terra theme
       addVariant('terra', '[data-theme="terra"] &');
