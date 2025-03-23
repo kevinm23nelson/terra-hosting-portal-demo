@@ -6,6 +6,31 @@ import {
   getMinerTypeDistribution,
 } from "../mockData";
 
+// Define interfaces for our data structure
+interface Miner {
+  seen: boolean;
+  state?: string;
+  // Add other properties as needed
+}
+
+interface StateStats {
+  [key: string]: { total: number; percentage: number };
+}
+
+interface MinerType {
+  name: string;
+  total: number;
+  online: number;
+  offline: number;
+  percentage: number;
+}
+
+interface ColorScheme {
+  bar: string;
+  fill: string;
+  badge: string;
+}
+
 const MockMinersList = () => {
   const [filter, setFilter] = useState("online");
   const [viewMode, setViewMode] = useState("type");
@@ -29,7 +54,7 @@ const MockMinersList = () => {
     };
 
     // Calculate miner state distribution
-    const stateStats = mockMiners.reduce((acc, miner) => {
+    const stateStats: StateStats = mockMiners.reduce((acc: StateStats, miner: Miner) => {
       const state = miner.state || "unknown";
       if (!acc[state]) {
         acc[state] = { total: 0, percentage: 0 };
@@ -51,7 +76,7 @@ const MockMinersList = () => {
   }, []);
 
   // Color schemes for visualization with dark mode support
-  const colors = [
+  const colors: ColorScheme[] = [
     {
       bar: "bg-blue-100 dark:bg-blue-900/30",
       fill: "bg-blue-500 dark:bg-blue-400",
@@ -78,9 +103,19 @@ const MockMinersList = () => {
     },
   ];
 
-  // Get appropriate icon for miner state
-  const getStateIcon = (state) => {
-    return statusVariants[state]?.icon || statusVariants.online.icon;
+  // Add type for statusVariants
+interface StatusVariant {
+  icon: React.ReactNode;
+  badge: string;
+}
+
+interface StatusVariants {
+  [key: string]: StatusVariant;
+}
+
+// Get appropriate icon for miner state
+  const getStateIcon = (state: string) => {
+    return (statusVariants as StatusVariants)[state]?.icon || statusVariants.online.icon;
   };
 
   return (
@@ -235,7 +270,7 @@ const MockMinersList = () => {
             <tbody>
               {viewMode === "status"
                 ? // Status View
-                  stateStats.map(([state, data], index) => {
+                  stateStats.map(([state, data]: [string, { total: number; percentage: number }], index) => {
                     const color = colors[index % colors.length];
                     return (
                       <tr key={state}>
@@ -271,7 +306,7 @@ const MockMinersList = () => {
                     );
                   })
                 : // Type View
-                  minerTypes.map((type, index) => {
+                  minerTypes.map((type: MinerType, index) => {
                     const color = colors[index % colors.length];
                     const displayPercentage =
                       filter === "online"
@@ -288,7 +323,6 @@ const MockMinersList = () => {
 
                     return (
                       <tr key={type.name}>
-                        {/* FIXING THIS - using exact same styles as "Active Miners" title */}
                         <td className="py-3 px-2 border-b border-gray-100 dark:border-gray-700">
                           <span className="text-gray-900 dark:text-gray-100">
                             {type.name}

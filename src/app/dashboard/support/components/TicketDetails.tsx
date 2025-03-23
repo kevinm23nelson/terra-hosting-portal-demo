@@ -62,9 +62,9 @@ interface Ticket {
   category: string;
   dueDate: string;
   resolution: string | null;
-  clientId: any;
-  assignedTo: any;
-  createdBy: any;
+  clientId: string | null; // Changed from any
+  assignedTo: User | null; // Changed from any
+  createdBy: User; // Changed from any
   comments: Comment[];
   createdAt: string;
   updatedAt: string;

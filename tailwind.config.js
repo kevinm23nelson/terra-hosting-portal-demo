@@ -1,7 +1,6 @@
-// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
+  darkMode: ["class", "[data-theme='dark']"],
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -51,6 +50,13 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Terra theme specific colors
+        'terra-teal': '#7FD1DB',
+        'terra-pink': '#E06CB0',
+        'terra-purple': '#A35DC0',
+      },
+      backgroundImage: {
+        'terra-gradient': 'linear-gradient(to right, #E06CB0, #A35DC0, #7FD1DB)',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -73,5 +79,11 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function({ addVariant }) {
+      // Add terra variant for the Terra theme
+      addVariant('terra', '[data-theme="terra"] &');
+    },
+  ],
 }

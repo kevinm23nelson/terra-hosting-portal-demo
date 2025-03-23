@@ -1,47 +1,47 @@
-'use client';
+"use client";
 
-import DashboardLayout from './components/DashboardLayout';
-import LoginTracker from './components/LoginTracker';
-import MockMinersList from './components/MockMinersList';
-import MockSubscriptionsList from './components/MockSubscriptionsList';
-import StatsCards from './components/StatsCards';
-import { Monitor, Zap, Server, CreditCard } from 'lucide-react';
-import { mockMiners, minerStats } from './mockData';
-import { mockAccount, getBillingStats } from './mockBillingData';
-import { getQuickBooksStats } from './mockQuickBooksData';
+import DashboardLayout from "./components/DashboardLayout";
+import LoginTracker from "./components/LoginTracker";
+import MockMinersList from "./components/MockMinersList";
+import MockSubscriptionsList from "./components/MockSubscriptionsList";
+import StatsCards from "./components/StatsCards";
+import { Monitor, Zap, Server, CreditCard } from "lucide-react";
+import { mockMiners, minerStats } from "./mockData";
+import { mockAccount, getBillingStats } from "./mockBillingData";
+import { getQuickBooksStats } from "./mockQuickBooksData";
 
 export default function DashboardPage() {
   // Get client data from mock files
-  const clientName = mockAccount?.first_name 
-    ? `${mockAccount.first_name} ${mockAccount.last_name}` 
+  const clientName = mockAccount?.first_name
+    ? `${mockAccount.first_name} ${mockAccount.last_name}`
     : "Demo Client";
-  
+
   // Get billing stats
   const billingStats = getBillingStats();
-  
+
   // Get QuickBooks stats
   const quickbooksStats = getQuickBooksStats();
-  
+
   // Combine stats from multiple sources
   const stats = {
     // Machine data from mockData.js
-    totalMachines: minerStats.total, 
+    totalMachines: minerStats.total,
     onlineMachines: minerStats.online,
     hashRate: minerStats.avgHashRate.toFixed(1),
-    
+
     // Power data from mockData.js
     powerDraw: Math.round(mockMiners.length * 100), // Estimate based on number of machines
-    curtailablePower: Math.round((mockMiners.length * 100) * 0.6), // Estimate 60% as curtailable
-    
+    curtailablePower: Math.round(mockMiners.length * 100 * 0.6), // Estimate 60% as curtailable
+
     // Billing data from mockBillingData.js
     totalNodes: billingStats.totalNodes,
     monthlyTotal: billingStats.monthlyTotal.toFixed(2),
     activeSubscriptions: billingStats.activeSubscriptionsCount,
-    
+
     // Balance from QuickBooks mock data
     outstandingBalance: quickbooksStats.totalBalance,
     paidInvoices: quickbooksStats.paidInvoices,
-    unpaidInvoices: quickbooksStats.unpaidInvoices
+    unpaidInvoices: quickbooksStats.unpaidInvoices,
   };
 
   // Generate stats cards with updated styling to match other components
@@ -50,7 +50,10 @@ export default function DashboardPage() {
       title: "Machine Overview",
       value: stats.totalMachines.toString(),
       subtitle: "Total Machines",
-      subtitleValue: `${((stats.onlineMachines / stats.totalMachines) * 100).toFixed(1)}% Online`,
+      subtitleValue: `${(
+        (stats.onlineMachines / stats.totalMachines) *
+        100
+      ).toFixed(1)}% Online`,
       additionalInfo: `${stats.hashRate} GH/s Avg Hashrate`,
       icon: Server,
       bgColor: "bg-blue-100",
@@ -59,7 +62,7 @@ export default function DashboardPage() {
       darkIconBg: "dark:bg-blue-600",
       valueColor: "text-gray-900 dark:text-white",
       textColor: "text-gray-700 dark:text-gray-200",
-      subtitleColor: "text-gray-600 dark:text-gray-300"
+      subtitleColor: "text-gray-600 dark:text-gray-300",
     },
     {
       title: "Power Management",
@@ -73,7 +76,7 @@ export default function DashboardPage() {
       darkIconBg: "dark:bg-green-600",
       valueColor: "text-gray-900 dark:text-white",
       textColor: "text-gray-700 dark:text-gray-200",
-      subtitleColor: "text-gray-600 dark:text-gray-300"
+      subtitleColor: "text-gray-600 dark:text-gray-300",
     },
     {
       title: "Subscribed Nodes",
@@ -88,7 +91,7 @@ export default function DashboardPage() {
       darkIconBg: "dark:bg-purple-600",
       valueColor: "text-gray-900 dark:text-white",
       textColor: "text-gray-700 dark:text-gray-200",
-      subtitleColor: "text-gray-600 dark:text-gray-300"
+      subtitleColor: "text-gray-600 dark:text-gray-300",
     },
     {
       title: "Outstanding Balance",
@@ -103,7 +106,7 @@ export default function DashboardPage() {
       darkIconBg: "dark:bg-orange-600",
       valueColor: "text-gray-900 dark:text-white",
       textColor: "text-gray-700 dark:text-gray-200",
-      subtitleColor: "text-gray-600 dark:text-gray-300"
+      subtitleColor: "text-gray-600 dark:text-gray-300",
     },
   ];
 
@@ -113,8 +116,8 @@ export default function DashboardPage() {
         {/* Top Section: Stats Overview and Login Tracker */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 auto-rows-fr">
           <div className="xl:col-span-2 min-h-0">
-            <StatsCards 
-              cards={statsCards} 
+            <StatsCards
+              cards={statsCards}
               title={`Welcome Back, ${clientName}`}
               subtitle="Current Terra Account Operations"
             />
@@ -139,26 +142,54 @@ export default function DashboardPage() {
 
         {/* Recent Activity Section */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
-<h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">
-              Recent Activity
-            </h2>          
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">
+            Recent Activity
+          </h2>
           <div className="space-y-4">
             {[
-              { date: '2025-03-19', event: 'New mining rig deployed', type: 'info' },
-              { date: '2025-03-17', event: 'Monthly maintenance completed', type: 'success' },
-              { date: '2025-03-15', event: 'Power optimization performed', type: 'info' },
-              { date: '2025-03-12', event: 'Alert: Machine B2 offline', type: 'warning' },
-              { date: '2025-03-10', event: 'Subscription renewed', type: 'info' }
+              {
+                date: "2025-03-19",
+                event: "New mining rig deployed",
+                type: "info",
+              },
+              {
+                date: "2025-03-17",
+                event: "Monthly maintenance completed",
+                type: "success",
+              },
+              {
+                date: "2025-03-15",
+                event: "Power optimization performed",
+                type: "info",
+              },
+              {
+                date: "2025-03-12",
+                event: "Alert: Machine B2 offline",
+                type: "warning",
+              },
+              {
+                date: "2025-03-10",
+                event: "Subscription renewed",
+                type: "info",
+              },
             ].map((activity, index) => (
               <div key={index} className="flex items-start">
-                <div className={`mt-1 w-3 h-3 rounded-full flex-shrink-0 ${
-                  activity.type === 'info' ? 'bg-blue-500' : 
-                  activity.type === 'success' ? 'bg-green-500' : 
-                  'bg-yellow-500'
-                }`}></div>
+                <div
+                  className={`mt-1 w-3 h-3 rounded-full flex-shrink-0 ${
+                    activity.type === "info"
+                      ? "bg-blue-500"
+                      : activity.type === "success"
+                      ? "bg-green-500"
+                      : "bg-yellow-500"
+                  }`}
+                ></div>
                 <div className="ml-4">
-                  <p className="text-gray-900 dark:text-gray-100">{activity.event}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{new Date(activity.date).toLocaleDateString()}</p>
+                  <p className="text-gray-900 dark:text-gray-100">
+                    {activity.event}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {new Date(activity.date).toLocaleDateString()}
+                  </p>
                 </div>
               </div>
             ))}

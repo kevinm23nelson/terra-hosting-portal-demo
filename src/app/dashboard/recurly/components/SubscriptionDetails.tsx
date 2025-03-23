@@ -11,8 +11,55 @@ import {
   Calendar,
 } from "lucide-react";
 
-export function SubscriptionDetails({ subscriptions, billingInfo }) {
-  const formatDate = (dateString) => {
+// Define TypeScript interfaces for our data structures
+interface NodeDistribution {
+  type: string;
+  name: string;
+  count: number;
+  price: number;
+}
+
+interface Subscription {
+  id: string;
+  state: string;
+  quantity: number;
+  total: number;
+  current_period_ends_at: string;
+  canceled_at?: string;
+  node_distribution?: NodeDistribution[];
+}
+
+interface PaymentMethod {
+  card_type: string;
+  last_four: string;
+  exp_month: number; // Changed from string to number
+  exp_year: number;  // Changed from string to number
+}
+
+interface Address {
+  street1: string;
+  street2?: string;
+  city: string;
+  region: string;
+  postal_code: string;
+  country: string;
+  phone?: string;
+}
+
+interface BillingInfo {
+  payment_method: PaymentMethod;
+  first_name: string;
+  last_name: string;
+  address: Address;
+}
+
+interface SubscriptionDetailsProps {
+  subscriptions: Subscription[];
+  billingInfo: BillingInfo;
+}
+
+export function SubscriptionDetails({ subscriptions, billingInfo }: SubscriptionDetailsProps) {
+  const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
@@ -21,7 +68,7 @@ export function SubscriptionDetails({ subscriptions, billingInfo }) {
   };
 
   // Helper to get node type icon
-  const getNodeIcon = (nodeType) => {
+  const getNodeIcon = (nodeType: string) => {
     switch (nodeType) {
       case "flux":
         return <Zap className="h-4 w-4 text-white" />;
@@ -37,7 +84,7 @@ export function SubscriptionDetails({ subscriptions, billingInfo }) {
   };
 
   // Helper to get node type background color
-  const getNodeColor = (nodeType) => {
+  const getNodeColor = (nodeType: string): string => {
     switch (nodeType) {
       case "flux":
         return "bg-yellow-500 dark:bg-yellow-600";
@@ -53,7 +100,7 @@ export function SubscriptionDetails({ subscriptions, billingInfo }) {
   };
 
   // Helper to get node type background color for cards
-  const getNodeBgColor = (nodeType) => {
+  const getNodeBgColor = (nodeType: string): string => {
     switch (nodeType) {
       case "flux":
         return "bg-yellow-50 dark:bg-yellow-900/30";
@@ -73,7 +120,7 @@ export function SubscriptionDetails({ subscriptions, billingInfo }) {
       {/* Node Subscription Details */}
       <div className="bg-white dark:bg-gray-800 rounded-[20px] shadow-sm overflow-hidden h-full">
         <div className="p-6 flex flex-col h-full">
-          {subscriptions.map((subscription) => (
+          {subscriptions.map((subscription: Subscription) => (
             <div key={subscription.id} className="space-y-6 flex-grow">
               <div className="flex justify-between items-center">
                 {/* Title with improved contrast */}
@@ -309,7 +356,7 @@ export function SubscriptionDetails({ subscriptions, billingInfo }) {
             Subscription Details
           </h2>
           <div className="grid grid-cols-2 gap-4">
-            {subscriptions.map((subscription) => (
+            {subscriptions.map((subscription: Subscription) => (
               <React.Fragment key={`usage-${subscription.id}`}>
                 {/* Total Nodes */}
                 <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">

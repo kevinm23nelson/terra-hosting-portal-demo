@@ -19,11 +19,13 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { mockUsers } from '../../mockTicketsData';
+// Import the shared types
+import { Ticket, User } from '../../../types';
 
 interface TicketFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (ticket: any) => void;
+  onSubmit: (ticket: Ticket) => void;
 }
 
 export default function TicketForm({ isOpen, onClose, onSubmit }: TicketFormProps) {
@@ -83,8 +85,11 @@ export default function TicketForm({ isOpen, onClose, onSubmit }: TicketFormProp
         dueDate.setDate(today.getDate() + 3);
     }
     
-    // Create new ticket object
-    const newTicket = {
+    // Assuming mockUsers.client is a User object containing id property
+    const clientUser = mockUsers.client as User;
+    
+    // Create new ticket object with clientId as string
+    const newTicket: Ticket = {
       id: `ticket-${Date.now()}`,
       title,
       description,
@@ -93,9 +98,10 @@ export default function TicketForm({ isOpen, onClose, onSubmit }: TicketFormProp
       category,
       dueDate: dueDate.toISOString(),
       resolution: null,
-      clientId: mockUsers.client,
-      assignedTo: null, // Will be assigned later by admin
-      createdBy: mockUsers.client,
+      clientId: clientUser.id, // Use the ID as a string
+      client: clientUser,      // Store the full User object in client property
+      assignedTo: null,        // Will be assigned later by admin
+      createdBy: clientUser,
       comments: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -237,3 +243,4 @@ export default function TicketForm({ isOpen, onClose, onSubmit }: TicketFormProp
       </DialogContent>
     </Dialog>
   );
+}

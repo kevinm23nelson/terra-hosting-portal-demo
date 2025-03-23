@@ -1,8 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Eye, ChevronDown, ChevronUp, Zap, Cloud, CloudLightning, Server } from 'lucide-react';
 
-export function BillingHistory({ invoices = [], accountId }) {
-  const [expandedInvoiceId, setExpandedInvoiceId] = useState(null);
+// Define TypeScript interfaces for the component
+interface LineItem {
+  description?: string;
+  amount: number;
+}
+
+interface Account {
+  id: string;
+  code?: string;
+  // Add other account properties as needed
+}
+
+interface Invoice {
+  id: string;
+  number: string;
+  description?: string; // Make description optional
+  state: string;
+  total: number;
+  paid: number;
+  created_at: string;
+  line_items: LineItem[];
+  account?: Account;
+}
+
+interface BillingHistoryProps {
+  invoices: Invoice[];
+  accountId: string;
+}
+
+export function BillingHistory({ invoices = [], accountId }: BillingHistoryProps) {
+  const [expandedInvoiceId, setExpandedInvoiceId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('all');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -16,7 +45,7 @@ export function BillingHistory({ invoices = [], accountId }) {
       return true;
     });
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -25,7 +54,7 @@ export function BillingHistory({ invoices = [], accountId }) {
   };
 
   // Helper to get status badge styling
-  const getInvoiceStatus = (state) => {
+  const getInvoiceStatus = (state: string) => {
     switch (state.toLowerCase()) {
       case 'paid':
         return {
@@ -50,14 +79,14 @@ export function BillingHistory({ invoices = [], accountId }) {
     }
   };
 
-  const handleInvoiceClick = (invoiceId) => {
+  const handleInvoiceClick = (invoiceId: string) => {
     setExpandedInvoiceId(expandedInvoiceId === invoiceId ? null : invoiceId);
     // Close filter dropdown when clicking on an invoice
     setIsFilterOpen(false);
   };
 
   // Helper to get node icon for line items
-  const getNodeIconForDescription = (description) => {
+  const getNodeIconForDescription = (description: string | null | undefined) => {
     if (!description) return null;
     
     if (description.toLowerCase().includes('flux')) {
@@ -74,8 +103,8 @@ export function BillingHistory({ invoices = [], accountId }) {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      const target = event.target;
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
       const dropdown = document.querySelector('.filter-dropdown');
       if (dropdown && !dropdown.contains(target)) {
         setIsFilterOpen(false);

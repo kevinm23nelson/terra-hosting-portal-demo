@@ -99,13 +99,11 @@ export default function MockMachineTypeDistribution() {
               {minerTypes.map((minerType, index) => {
                 const color = colors[index % colors.length];
                 
-                // Calculate accurate percentages
+                // Calculate total percentage for reference
                 const totalPercentage = (minerType.total / totalMachines) * 100;
-                const activePercentage = viewMode === 'active' 
-                  ? (minerType.online / totalActive) * 100
-                  : totalPercentage;
                 
-                const displayPercentage = viewMode === 'active'
+                // Calculate display percentage based on view mode
+                const displayPercentage = viewMode === 'active' 
                   ? (minerType.online / totalActive) * 100
                   : totalPercentage;
                 

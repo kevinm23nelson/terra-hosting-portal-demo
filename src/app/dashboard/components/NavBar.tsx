@@ -1,10 +1,10 @@
 // src/app/dashboard/components/NavBar.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import {
   LayoutDashboard,
   Monitor,
@@ -14,8 +14,15 @@ import {
   X,
   Receipt,
   Server,
-  MessageCircle
-} from 'lucide-react';
+  MessageCircle,
+} from "lucide-react";
+
+// Define types for menu items
+interface MenuItem {
+  icon: React.ReactNode;
+  text: string;
+  href: string;
+}
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,51 +31,52 @@ export default function NavBar() {
 
   const handleSignOut = async () => {
     // Clear the demo-auth cookie
-    document.cookie = "demo-auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    
+    document.cookie =
+      "demo-auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
     // Redirect to login page
-    router.push('/dashboard/login');
+    router.push("/dashboard/login");
   };
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       icon: <LayoutDashboard className="w-5 h-5" />,
-      text: 'Dashboard',
+      text: "Dashboard",
       href: `/dashboard`,
     },
     {
       icon: <Monitor className="w-5 h-5" />,
-      text: 'My Machines',
+      text: "My Machines",
       href: `/dashboard/machines`,
     },
     {
       icon: <Server className="w-5 h-5" />,
-      text: 'Cloud Services',
+      text: "Cloud Services",
       href: `/dashboard/recurly`,
     },
     {
       icon: <Receipt className="w-5 h-5" />,
-      text: 'Billing',
+      text: "Billing",
       href: `/dashboard/billing`,
     },
     {
       icon: <MessageCircle className="w-5 h-5" />,
-      text: 'Support',
+      text: "Support",
       href: `/dashboard/support`,
     },
     {
       icon: <Settings className="w-5 h-5" />,
-      text: 'Settings',
+      text: "Settings",
       href: `/dashboard/settings`,
     },
   ];
 
   // Function to check if a menu item is active
-  const isActive = (href) => {
-    if (href === '/dashboard' && pathname === '/dashboard') {
+  const isActive = (href: string): boolean => {
+    if (href === "/dashboard" && pathname === "/dashboard") {
       return true;
     }
-    if (href !== '/dashboard' && pathname.startsWith(href)) {
+    if (href !== "/dashboard" && pathname.startsWith(href)) {
       return true;
     }
     return false;
@@ -80,7 +88,7 @@ export default function NavBar() {
         h-screen bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900
         transition-all duration-500 ease-in-out will-change-transform
         fixed md:sticky top-0 left-0
-        ${isOpen ? 'w-64 translate-x-0' : '-translate-x-full'}
+        ${isOpen ? "w-64 translate-x-0" : "-translate-x-full"}
         md:translate-x-0 md:w-20 md:flex md:flex-col
         lg:w-20 lg:hover:w-64
         xl:w-64
@@ -101,13 +109,23 @@ export default function NavBar() {
       <div className="flex items-center justify-between pt-10 pb-6 px-5 mb-8">
         <div className="flex items-center justify-center w-full">
           {/* Larger logo image with more padding */}
+          {/* Logo that switches between full and minimized versions */}
           <div className="flex-shrink-0 relative">
-            <Image 
-              src="/images/terra-logo-1.png" 
-              alt="Terra Hosting Logo" 
-              width={200} 
-              height={48} 
-              className="object-contain w-auto h-14 md:h-12 lg:h-14" 
+            {/* Full logo visible on large screens or when menu is expanded */}
+            <Image
+              src="/images/terra-logo-1.png"
+              alt="Terra Hosting Logo"
+              width={200}
+              height={48}
+              className="object-contain w-auto h-14 hidden md:hidden lg:group-hover:block xl:block"
+            />
+            {/* Minimized logo visible on smaller screens */}
+            <Image
+              src="/images/terra-logo-minimized.png"
+              alt="Terra Hosting Logo"
+              width={48}
+              height={48}
+              className="object-contain w-auto h-14 md:block lg:block lg:group-hover:hidden xl:hidden"
             />
           </div>
         </div>
@@ -134,8 +152,8 @@ export default function NavBar() {
                     transition-all duration-300 ease-out
                     ${
                       active
-                        ? 'bg-[#7FD1DB]/20' /* Light blue background for active items */
-                        : 'hover:bg-[#E06CB0]/10' /* Pink background for hover state */
+                        ? "bg-[#7FD1DB]/20" /* Light blue background for active items */
+                        : "hover:bg-[#E06CB0]/10" /* Pink background for hover state */
                     }
                     transform-gpu hover:translate-x-1
                     active:scale-[0.98] active:translate-x-0
@@ -144,7 +162,11 @@ export default function NavBar() {
                   <span
                     className={`
                       transform-gpu transition-all duration-300 ease-out
-                      ${active ? 'text-[#7FD1DB] translate-x-0.5' : 'text-gray-700 dark:text-gray-200 hover:text-[#E06CB0]'}
+                      ${
+                        active
+                          ? "text-[#7FD1DB] translate-x-0.5"
+                          : "text-gray-700 dark:text-gray-200 hover:text-[#E06CB0]"
+                      }
                       group-hover:scale-105 group-hover:text-[#E06CB0]
                     `}
                   >
@@ -154,7 +176,11 @@ export default function NavBar() {
                     className={`
                       whitespace-nowrap transform-gpu
                       transition-all duration-500 ease-out
-                      ${active ? 'text-[#7FD1DB] font-semibold' : 'text-gray-700 dark:text-gray-200 hover:text-[#E06CB0]'}
+                      ${
+                        active
+                          ? "text-[#7FD1DB] font-semibold"
+                          : "text-gray-700 dark:text-gray-200 hover:text-[#E06CB0]"
+                      }
                       group-hover:text-[#E06CB0]
                       lg:opacity-0 lg:group-hover:opacity-100 lg:group-hover:translate-x-0 lg:translate-x-[-10px]
                       xl:opacity-100 xl:translate-x-0

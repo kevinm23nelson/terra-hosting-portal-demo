@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent } from '@/components/ui/tabs'; // Removed TabsList, TabsTrigger
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { FileText, Bot, ArrowRight } from 'lucide-react';
 import DashboardLayout from '../components/DashboardLayout';
 import { TicketSupportOverview } from './components/TicketSupportOverview';
@@ -11,15 +11,37 @@ import { MyTickets } from './components/MyTickets';
 import { MyTicketHistory } from './components/MyTicketHistory';
 import AIChatModal from './components/AIChatModal';
 import { mockTickets, mockTicketStats } from '../mockTicketsData';
+// Import the shared type from the types file
+import { Ticket } from '../../types';
 
 export default function SupportPage() {
   const [isTicketFormOpen, setIsTicketFormOpen] = useState(false);
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('active');
-  const [tickets, setTickets] = useState(mockTickets);
+  
+  // Transform mockTickets to conform to our Ticket interface
+  const transformedTickets = React.useMemo(() => {
+    return mockTickets.map(ticket => {
+      // If clientId is an object, extract its ID
+      const clientId = typeof ticket.clientId === 'object' && ticket.clientId !== null 
+        ? ticket.clientId.id 
+        : (ticket.clientId as string);
+      
+      // Store the client object separately if available
+      const client = typeof ticket.clientId === 'object' ? ticket.clientId : undefined;
+      
+      return {
+        ...ticket,
+        clientId,
+        client
+      };
+    });
+  }, []);
+  
+  const [tickets, setTickets] = useState<Ticket[]>(transformedTickets);
 
   // Function to add a new ticket
-  const handleAddTicket = (newTicket) => {
+  const handleAddTicket = (newTicket: Ticket) => {
     setTickets([newTicket, ...tickets]);
   };
 
@@ -82,7 +104,7 @@ export default function SupportPage() {
           </Card>
         </div>
 
-        {/* Tickets Section - Removed the top-level TabsList, keeping only TabsContent */}
+        {/* Tickets Section */}
         <div className="mt-8">
           <Tabs value={activeTab} className="w-full">
             <TabsContent value="active" className="mt-0 p-0">

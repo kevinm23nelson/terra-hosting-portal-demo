@@ -2,54 +2,54 @@
 
 :root {
   /* Base colors for light mode */
-  --page-background: #f3f4f6;       /* Light gray for main background */
-  --sidebar-bg: #ffffff;            /* White sidebar */
-  --card-bg: #ffffff;               /* White cards */
-  --foreground-color: #171717;      /* Dark text */
-  --card-border: #e5e7eb;           /* Light border */
-  --primary-color: #6366f1;         /* Indigo */
-  --secondary-color: #10b981;       /* Emerald */
-  --accent-color: #8b5cf6;          /* Purple */
-  --muted-color: #9ca3af;           /* Gray */
+  --page-background: #f3f4f6; /* Light gray for main background */
+  --sidebar-bg: #ffffff; /* White sidebar */
+  --card-bg: #ffffff; /* White cards */
+  --foreground-color: #171717; /* Dark text */
+  --card-border: #e5e7eb; /* Light border */
+  --primary-color: #6366f1; /* Indigo */
+  --secondary-color: #10b981; /* Emerald */
+  --accent-color: #8b5cf6; /* Purple */
+  --muted-color: #9ca3af; /* Gray */
   --muted-foreground-color: #6b7280; /* Dark gray text */
-  
+
   /* Status colors */
-  --success-color: #22c55e;         /* Green */
-  --warning-color: #f59e0b;         /* Amber */
-  --error-color: #ef4444;           /* Red */
-  --info-color: #3b82f6;            /* Blue */
-  
+  --success-color: #22c55e; /* Green */
+  --warning-color: #f59e0b; /* Amber */
+  --error-color: #ef4444; /* Red */
+  --info-color: #3b82f6; /* Blue */
+
   /* UI element colors */
-  --input-bg: #f9fafb;              /* Light gray inputs */
-  --table-row-hover: #f5f5f5;       /* Light gray hover */
-  --table-header-bg: #f9fafb;       /* Light gray table headers */
-  --table-border: #e5e7eb;          /* Light gray table borders */
+  --input-bg: #f9fafb; /* Light gray inputs */
+  --table-row-hover: #f5f5f5; /* Light gray hover */
+  --table-header-bg: #f9fafb; /* Light gray table headers */
+  --table-border: #e5e7eb; /* Light gray table borders */
 }
 
 .dark {
   /* Base colors for dark mode */
-  --page-background: #0f172a;        /* Dark navy for main background */
-  --sidebar-bg: #1e293b;             /* Slightly lighter navy for sidebar */
-  --card-bg: #1e293b;                /* Cards match sidebar */
-  --foreground-color: #f8fafc;       /* Off-white text */
-  --card-border: #334155;            /* Darker border */
-  --primary-color: #818cf8;          /* Lighter indigo */
-  --secondary-color: #34d399;        /* Brighter emerald */
-  --accent-color: #a78bfa;           /* Brighter purple */
-  --muted-color: #64748b;            /* Slate */
+  --page-background: #0f172a; /* Dark navy for main background */
+  --sidebar-bg: #1e293b; /* Slightly lighter navy for sidebar */
+  --card-bg: #1e293b; /* Cards match sidebar */
+  --foreground-color: #f8fafc; /* Off-white text */
+  --card-border: #334155; /* Darker border */
+  --primary-color: #818cf8; /* Lighter indigo */
+  --secondary-color: #34d399; /* Brighter emerald */
+  --accent-color: #a78bfa; /* Brighter purple */
+  --muted-color: #64748b; /* Slate */
   --muted-foreground-color: #94a3b8; /* Light slate text */
-  
+
   /* Status colors */
-  --success-color: #4ade80;          /* Brighter green */
-  --warning-color: #fbbf24;          /* Brighter amber */
-  --error-color: #f87171;            /* Brighter red */
-  --info-color: #60a5fa;             /* Brighter blue */
-  
+  --success-color: #4ade80; /* Brighter green */
+  --warning-color: #fbbf24; /* Brighter amber */
+  --error-color: #f87171; /* Brighter red */
+  --info-color: #60a5fa; /* Brighter blue */
+
   /* UI element colors */
-  --input-bg: #1e293b;               /* Input matches cards */
-  --table-row-hover: #334155;        /* Darker hover */
-  --table-header-bg: #1e293b;        /* Table header matches cards */
-  --table-border: #334155;           /* Darker table borders */
+  --input-bg: #1e293b; /* Input matches cards */
+  --table-row-hover: #334155; /* Darker hover */
+  --table-header-bg: #1e293b; /* Table header matches cards */
+  --table-border: #334155; /* Darker table borders */
 }
 
 /* Apply CSS variables to elements */
@@ -107,13 +107,25 @@ th {
   background-color: var(--table-header-bg);
   color: var(--foreground-color);
 }
+/* Terra theme specific utility classes */
+.bg-terra-gradient {
+  background: linear-gradient(to right, #e06cb0, #a35dc0, #7fd1db);
+}
 
+.text-terra-gradient {
+  background: linear-gradient(to right, #e06cb0, #a35dc0, #7fd1db);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 tr:hover {
   background-color: var(--table-row-hover);
 }
 
 /* Input styling */
-input, select, textarea {
+input,
+select,
+textarea {
   background-color: var(--input-bg);
   border-color: var(--card-border);
   color: var(--foreground-color);
