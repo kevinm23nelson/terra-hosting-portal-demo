@@ -71,9 +71,11 @@ export function AccountInformation({ customer }: AccountInformationProps) {
                 </div>
                 <h3 className="text-gray-900 dark:text-gray-100 font-semibold">Email Address</h3>
               </div>
-              <p className="ml-10 text-gray-900 dark:text-gray-100 font-medium">
-                {customer.PrimaryEmailAddr.Address}
-              </p>
+              <div className="ml-10 max-w-full">
+                <p className="text-gray-900 dark:text-gray-100 font-medium break-words overflow-hidden text-ellipsis">
+                  {customer.PrimaryEmailAddr.Address}
+                </p>
+              </div>
             </div>
           )}
 
