@@ -298,81 +298,87 @@ export function BillingHistory({ invoices = [], accountId }: BillingHistoryProps
                       </td>
                     </tr>
 
-                    {/* Expanded invoice details */}
-                    {isExpanded && (
-                      <tr>
-                        <td
-                          colSpan={6}
-                          className="bg-blue-50 dark:bg-blue-900/20 p-4"
+                    {/* Animated expanded invoice details */}
+                    <tr className={isExpanded ? "expanded-row" : "collapsed-row"}>
+                      <td colSpan={6} className="p-0 bg-blue-50 dark:bg-blue-900/20">
+                        <div 
+                          className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                            isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                          }`}
                         >
-                          <div className="p-4 rounded-lg border border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-800">
-                            <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">
-                              Line Items
-                            </h4>
-                            <div className="space-y-2 mb-4">
-                              {invoice.line_items.map((item, index) => (
-                                <div
-                                  key={index}
-                                  className="flex justify-between text-sm py-2 border-b border-blue-100 dark:border-blue-800 last:border-0"
-                                >
-                                  <span className="font-medium text-gray-900 dark:text-gray-100 flex items-center">
-                                    {getNodeIconForDescription(item.description)}
-                                    {item.description || `Item ${index + 1}`}
-                                  </span>
-                                  <span className="font-bold text-gray-900 dark:text-gray-100">
-                                    ${item.amount.toFixed(2)}
-                                  </span>
+                          {/* Only render the content when expanded for performance */}
+                          {isExpanded && (
+                            <div className="p-4">
+                              <div className="p-4 rounded-lg border border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-800">
+                                <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">
+                                  Line Items
+                                </h4>
+                                <div className="space-y-2 mb-4">
+                                  {invoice.line_items.map((item, index) => (
+                                    <div
+                                      key={index}
+                                      className="flex justify-between text-sm py-2 border-b border-blue-100 dark:border-blue-800 last:border-0"
+                                    >
+                                      <span className="font-medium text-gray-900 dark:text-gray-100 flex items-center">
+                                        {getNodeIconForDescription(item.description)}
+                                        {item.description || `Item ${index + 1}`}
+                                      </span>
+                                      <span className="font-bold text-gray-900 dark:text-gray-100">
+                                        ${item.amount.toFixed(2)}
+                                      </span>
+                                    </div>
+                                  ))}
                                 </div>
-                              ))}
-                            </div>
 
-                            {/* Totals with lighter, softer background color */}
-                            <div className="bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded-lg border border-indigo-200 dark:border-indigo-700 space-y-2">
-                              <div className="flex justify-between text-sm">
-                                <span className="font-medium text-gray-900 dark:text-gray-100">
-                                  Total
-                                </span>
-                                <span className="font-bold text-gray-900 dark:text-gray-100">
-                                  ${invoice.total.toFixed(2)}
-                                </span>
-                              </div>
-                              <div className="flex justify-between text-sm">
-                                <span className="font-medium text-gray-900 dark:text-gray-100">
-                                  Amount Paid
-                                </span>
-                                <span className="font-bold text-gray-900 dark:text-gray-100">
-                                  ${invoice.paid.toFixed(2)}
-                                </span>
-                              </div>
-                              
-                              {invoice.total - invoice.paid > 0 && (
-                                <div className="flex justify-between text-sm border-t pt-2 border-indigo-200 dark:border-indigo-700">
-                                  <span className="font-medium text-gray-900 dark:text-gray-100">
-                                    Balance
-                                  </span>
-                                  <span className="font-bold text-red-700 dark:text-red-300">
-                                    ${(invoice.total - invoice.paid).toFixed(2)}
-                                  </span>
+                                {/* Totals with lighter, softer background color */}
+                                <div className="bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded-lg border border-indigo-200 dark:border-indigo-700 space-y-2">
+                                  <div className="flex justify-between text-sm">
+                                    <span className="font-medium text-gray-900 dark:text-gray-100">
+                                      Total
+                                    </span>
+                                    <span className="font-bold text-gray-900 dark:text-gray-100">
+                                      ${invoice.total.toFixed(2)}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between text-sm">
+                                    <span className="font-medium text-gray-900 dark:text-gray-100">
+                                      Amount Paid
+                                    </span>
+                                    <span className="font-bold text-gray-900 dark:text-gray-100">
+                                      ${invoice.paid.toFixed(2)}
+                                    </span>
+                                  </div>
+                                  
+                                  {invoice.total - invoice.paid > 0 && (
+                                    <div className="flex justify-between text-sm border-t pt-2 border-indigo-200 dark:border-indigo-700">
+                                      <span className="font-medium text-gray-900 dark:text-gray-100">
+                                        Balance
+                                      </span>
+                                      <span className="font-bold text-red-700 dark:text-red-300">
+                                        ${(invoice.total - invoice.paid).toFixed(2)}
+                                      </span>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
 
-                            {/* Download button with lighter colors */}
-                            <div className="flex justify-end mt-4">
-                              <button className="px-3 py-1.5 text-sm bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors flex items-center gap-1.5">
-                                <Download
-                                  size={14}
-                                  className="text-green-800 dark:text-green-200"
-                                />
-                                <span className="font-bold text-green-800 dark:text-green-200">
-                                  Download PDF
-                                </span>
-                              </button>
+                                {/* Download button with lighter colors */}
+                                <div className="flex justify-end mt-4">
+                                  <button className="px-3 py-1.5 text-sm bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors flex items-center gap-1.5">
+                                    <Download
+                                      size={14}
+                                      className="text-green-800 dark:text-green-200"
+                                    />
+                                    <span className="font-bold text-green-800 dark:text-green-200">
+                                      Download PDF
+                                    </span>
+                                  </button>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
+                          )}
+                        </div>
+                      </td>
+                    </tr>
                   </React.Fragment>
                 );
               })}
@@ -380,6 +386,41 @@ export function BillingHistory({ invoices = [], accountId }: BillingHistoryProps
           </table>
         </div>
       </div>
+
+      {/* Global styles for animations */}
+      <style jsx global>{`
+        /* Add smooth transition for expanding/collapsing rows */
+        .expanded-row, .collapsed-row {
+          transition: all 0.3s ease-in-out;
+        }
+        
+        /* Ensure content slides in smoothly */
+        .expanded-row td > div {
+          animation: slideDown 0.3s ease forwards;
+        }
+        
+        .collapsed-row td > div {
+          animation: slideUp 0.3s ease forwards;
+        }
+        
+        @keyframes slideDown {
+          from {
+            transform: translateY(-10px);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes slideUp {
+          from {
+            transform: translateY(0);
+          }
+          to {
+            transform: translateY(-10px);
+          }
+        }
+      `}</style>
     </div>
   );
 }
