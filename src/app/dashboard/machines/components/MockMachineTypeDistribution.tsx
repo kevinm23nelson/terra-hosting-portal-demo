@@ -38,12 +38,12 @@ export default function MockMachineTypeDistribution() {
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-[20px] shadow-sm overflow-hidden">
-      <div className="px-6 py-4">
+    <div className="bg-white dark:bg-gray-800 rounded-[20px] shadow-sm overflow-hidden h-full flex flex-col">
+      <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Machine Type Distribution</h2>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">Detailed breakdown by machine type</p>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Machine Type Distribution</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Detailed breakdown by machine type</p>
           </div>
           <div className="flex items-center gap-2">
             <button 
@@ -72,8 +72,8 @@ export default function MockMachineTypeDistribution() {
         </div>
       </div>
       
-      <div className="px-6 pb-0">
-        <div className="border-t border-gray-100 dark:border-gray-700 pt-4">
+      <div className="flex-grow flex flex-col">
+        <div className="px-6 pb-0">
           <table className="w-full">
             <thead>
               <tr>
@@ -90,53 +90,53 @@ export default function MockMachineTypeDistribution() {
             </thead>
           </table>
         </div>
-      </div>
-      
-      <div className="px-6 py-0">
-        <div className="overflow-y-auto max-h-[300px]">
-          <table className="w-full">
-            <tbody>
-              {minerTypes.map((minerType, index) => {
-                const color = colors[index % colors.length];
-                
-                // Calculate total percentage for reference
-                const totalPercentage = (minerType.total / totalMachines) * 100;
-                
-                // Calculate display percentage based on view mode
-                const displayPercentage = viewMode === 'active' 
-                  ? (minerType.online / totalActive) * 100
-                  : totalPercentage;
-                
-                return (
-                  <tr key={index} className="border-b border-gray-100 dark:border-gray-700">
-                    {/* Fixed machine type name styling to match heading */}
-                    <td className="py-6 align-middle w-[22%]">
-                      <span className="text-gray-900 dark:text-gray-100">
-                        {minerType.name}
-                      </span>
-                    </td>
-                    <td className="py-6 align-middle w-[50%] pr-8">
-                      <div
-                        className={`relative h-[5px] rounded-full overflow-hidden ${color.bar}`}
-                      >
+        
+        <div className="px-6 py-0 flex-grow">
+          <div className="overflow-y-auto h-full max-h-[300px] min-h-[278px]">
+            <table className="w-full">
+              <tbody>
+                {minerTypes.map((minerType, index) => {
+                  const color = colors[index % colors.length];
+                  
+                  // Calculate total percentage for reference
+                  const totalPercentage = (minerType.total / totalMachines) * 100;
+                  
+                  // Calculate display percentage based on view mode
+                  const displayPercentage = viewMode === 'active' 
+                    ? (minerType.online / totalActive) * 100
+                    : totalPercentage;
+                  
+                  return (
+                    <tr key={index} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+                      {/* Fixed machine type name styling to match heading */}
+                      <td className="py-6 align-middle w-[22%]">
+                        <span className="text-gray-900 dark:text-gray-100">
+                          {minerType.name}
+                        </span>
+                      </td>
+                      <td className="py-6 align-middle w-[50%] pr-8">
                         <div
-                          className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${color.fill}`}
-                          style={{ width: `${displayPercentage}%` }}
-                        />
-                      </div>
-                    </td>
-                    <td className="py-6 align-middle w-[28%]">
-                      <div
-                        className={`inline-flex items-center justify-center px-3 py-1 rounded-md border whitespace-nowrap text-sm ${color.badge}`}
-                      >
-                        {minerType.total} ({minerType.online} active) ({displayPercentage.toFixed(1)}%)
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                          className={`relative h-[5px] rounded-full overflow-hidden ${color.bar}`}
+                        >
+                          <div
+                            className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${color.fill}`}
+                            style={{ width: `${displayPercentage}%` }}
+                          />
+                        </div>
+                      </td>
+                      <td className="py-6 align-middle w-[28%]">
+                        <div
+                          className={`inline-flex items-center justify-center px-3 py-1 rounded-md border whitespace-nowrap text-sm ${color.badge}`}
+                        >
+                          {minerType.total} ({minerType.online} active) ({displayPercentage.toFixed(1)}%)
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
