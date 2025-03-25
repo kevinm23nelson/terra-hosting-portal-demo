@@ -24,6 +24,9 @@ interface AIChatModalProps {
   onClose: () => void;
 }
 
+// Updated LLM service URL to match your Docker setup
+const LLM_SERVICE_URL = 'http://localhost:3002/api';
+
 export default function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -35,17 +38,48 @@ export default function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+  // Check if the LLM service is available when the modal opens
+  useEffect(() => {
+    if (isOpen) {
+      checkServiceAvailability();
+    }
+  }, [isOpen]);
+
+  const checkServiceAvailability = async () => {
+    try {
+      console.log('Checking LLM service availability...');
+      const response = await fetch(`${LLM_SERVICE_URL}/health`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        console.log('LLM service is available');
+        setConnectionError(false);
+      } else {
+        console.error('LLM service health check failed with status:', response.status);
+        setConnectionError(true);
+      }
+    } catch (error) {
+      console.error('LLM service health check failed:', error);
+      setConnectionError(true);
+    }
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!input.trim()) return;
     
     // Add user message
@@ -60,9 +94,34 @@ export default function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
     setInput('');
     setIsTyping(true);
     
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(input);
+    try {
+      console.log('Sending request to LLM service...');
+      
+      // Call your LLM service with updated port
+      const response = await fetch(`${LLM_SERVICE_URL}/v1/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: input,
+          mode: 'demo',
+          max_tokens: 500,
+          temperature: 0.7
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API error:', response.status, errorText);
+        throw new Error(`Failed to get response from AI service: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('LLM service response:', data);
+      
+      const aiResponse = data.choices?.[0]?.text || "Sorry, I couldn't process your request.";
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -71,35 +130,23 @@ export default function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
       };
       
       setMessages(prev => [...prev, assistantMessage]);
+      setConnectionError(false);
+    } catch (error) {
+      console.error('Error calling LLM service:', error);
+      setConnectionError(true);
+      
+      // Fallback to local response in case of error
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: "I'm having trouble connecting to the server. Please try again later or submit a support ticket for assistance.",
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, assistantMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
-  };
-
-  // Function to generate AI responses based on user input
-  const generateAIResponse = (userInput: string): string => {
-    const input = userInput.toLowerCase();
-    
-    if (input.includes('billing') || input.includes('invoice') || input.includes('payment')) {
-      return "Your current billing cycle ends on the 25th of this month. Your last invoice was for $1,500.00 and was paid on March 5th. If you have specific questions about charges or need to update payment information, please submit a detailed ticket for our billing team.";
     }
-    
-    if (input.includes('miner') || input.includes('mining') || input.includes('hash') || input.includes('foreman')) {
-      return "Your mining farm is currently operating at 98.2% efficiency with 42 active miners. The current hash rate is 4.2 PH/s. If you're experiencing issues with specific miners, please provide their IDs or IP addresses so I can give you more detailed information.";
-    }
-    
-    if (input.includes('cloud') || input.includes('node') || input.includes('server')) {
-      return "Your cloud nodes are running normally. You're currently using 78% of your allocated storage and 65% of compute resources. Would you like information about scaling options or performance optimization?";
-    }
-    
-    if (input.includes('password') || input.includes('reset') || input.includes('login')) {
-      return "For security reasons, I can't handle password resets directly. Please use the 'Forgot Password' option on the login page or submit a ticket for account access issues, and our team will assist you promptly.";
-    }
-    
-    if (input.includes('upgrade') || input.includes('plan') || input.includes('subscription')) {
-      return "We offer several upgrade options for your current plan. You can increase your compute resources, storage, or add advanced monitoring features. Would you like me to have a sales representative contact you with specific pricing for your needs?";
-    }
-    
-    return "I understand you're asking about " + input.split(' ').slice(0, 3).join(' ') + "... For detailed information on this topic, I'd recommend creating a support ticket so our specialists can assist you. Would you like information on any specific area of our services in the meantime?";
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -120,6 +167,17 @@ export default function AIChatModal({ isOpen, onClose }: AIChatModalProps) {
         </DialogHeader>
         
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {connectionError && (
+            <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-md p-3 mb-4">
+              <div className="flex items-center">
+                <AlertCircle className="h-4 w-4 text-amber-500 mr-2" />
+                <p className="text-sm text-amber-700 dark:text-amber-300">
+                  Unable to connect to the AI service. Using offline fallback responses.
+                </p>
+              </div>
+            </div>
+          )}
+          
           {messages.map((message) => (
             <div 
               key={message.id} 
